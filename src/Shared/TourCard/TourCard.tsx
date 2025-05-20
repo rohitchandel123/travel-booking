@@ -2,7 +2,7 @@ import './TourCard.css';
 import { Link } from 'react-router-dom';
 import { ROUTES_CONFIG } from '../../Shared/Constants';
 import { useState, useEffect } from 'react';
-import { doc, setDoc, deleteDoc, getDoc } from 'firebase/firestore';
+import { doc, setDoc, deleteDoc } from 'firebase/firestore';
 import { auth, db } from '../../firebaseConfig';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faHeart } from '@fortawesome/free-solid-svg-icons';
@@ -18,6 +18,8 @@ interface TourCardProps {
   readonly tourPrice: string;
   readonly tourDuration: string;
   readonly slugValue: string;
+  readonly isFavorite?: boolean;
+  readonly onFavoriteChange?: (slugValue: string, isFavorite: boolean) => void;
   readonly onRemoveFavorite?: () => void; 
 }
 
@@ -31,21 +33,16 @@ function TourCard({
   tourPrice,
   tourDuration,
   slugValue,
+  isFavorite = false,
+  onFavoriteChange,
   onRemoveFavorite,
 }: TourCardProps) {
-  const [isFavorite, setIsFavorite] = useState(false);
+  const [isLocalFavorite, setIsLocalFavorite] = useState(isFavorite);
   const user = auth.currentUser;
-
+  
   useEffect(() => {
-    const checkFavorite = async () => {
-      if (user) {
-        const favoriteRef = doc(db, 'favorites', `${user.uid}_${slugValue}`);
-        const docSnap = await getDoc(favoriteRef);
-        setIsFavorite(docSnap.exists());
-      }
-    };
-    checkFavorite();
-  }, [user, slugValue]);
+    setIsLocalFavorite(isFavorite);
+  }, [isFavorite]);
 
   const handleFavoriteToggle = async () => {
     if (!user) {
@@ -56,9 +53,14 @@ function TourCard({
     const favoriteRef = doc(db, 'favorites', `${user.uid}_${slugValue}`);
 
     try {
-      if (isFavorite) {
+      if (isLocalFavorite) {
         await deleteDoc(favoriteRef);
-        setIsFavorite(false);
+        setIsLocalFavorite(false);
+        
+        if (onFavoriteChange) {
+          onFavoriteChange(slugValue, false);
+        }
+        
         if (onRemoveFavorite) {
           onRemoveFavorite(); 
         }
@@ -76,7 +78,12 @@ function TourCard({
           tourDuration,
           timestamp: new Date(),
         });
-        setIsFavorite(true);
+        
+        setIsLocalFavorite(true);
+        
+        if (onFavoriteChange) {
+          onFavoriteChange(slugValue, true);
+        }
       }
     } catch (error) {
       console.error('Error updating favorite:', error);
@@ -101,7 +108,7 @@ function TourCard({
           >
             <FontAwesomeIcon
               icon={faHeart}
-              className={isFavorite ? 'heart-icon favorite' : 'heart-icon'}
+              className={isLocalFavorite ? 'heart-icon favorite' : 'heart-icon'}
             />
           </button>
         </div>
@@ -139,5 +146,3 @@ function TourCard({
 }
 
 export default TourCard;
-
-

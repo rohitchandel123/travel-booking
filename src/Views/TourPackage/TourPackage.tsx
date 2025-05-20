@@ -8,6 +8,8 @@ import FilterByReviews from "./Filter/FilterByReviews/index";
 import FilterByPrice from "./Filter/FilterByPrice/index";
 import TourCardSkeleton from "../../Shared/TourCardSkeleton/TourCardSkeleton";
 import TourCard from "../../Shared/TourCard/index";
+import { collection, query, where, getDocs } from 'firebase/firestore';
+import { auth, db } from "../../firebaseConfig";
 
 import {
   useGetTrendingToursQuery,
@@ -78,6 +80,38 @@ const generatePageNumbers = (
   return pages;
 };
 
+const calculatePriceRange = (attractions: AttractionType[]): [number, number] => {
+  if (!attractions || attractions.length === 0) {
+    return [0.0001, 1];
+  }
+
+  const ethPrices = attractions
+    .map(item => {
+      const usdPrice = item?.representativePrice?.chargeAmount;
+      if (typeof usdPrice === "number" && ETH_PRICE > 0) {
+        return usdPrice / ETH_PRICE;
+      }
+      return null;
+    })
+    .filter((price): price is number => price !== null);
+
+  if (ethPrices.length === 0) {
+    return [0.0001, 1];
+  }
+
+  const minPrice = Math.min(...ethPrices);
+  const maxPrice = Math.max(...ethPrices);
+
+  const padding = (maxPrice - minPrice) * 0.1;
+  const paddedMin = Math.max(0.0001, minPrice - padding);
+  const paddedMax = maxPrice + padding;
+
+  return [
+    Math.round(paddedMin * 100000) / 100000,
+    Math.round(paddedMax * 100000) / 100000
+  ];
+};
+
 function TourPackagePage() {
   const [searchParams, setSearchParams] = useSearchParams();
 
@@ -92,10 +126,55 @@ function TourPackagePage() {
   const sidebarDestination = searchParams.get("sidebarDestination") || "";
 
   const [sidebarSearchInput, setSidebarSearchInput] = useState(sidebarSearch);
+  const [favorites, setFavorites] = useState<string[]>([]);
+  const [isLoadingFavorites, setIsLoadingFavorites] = useState(true);
 
   useEffect(() => {
     setSidebarSearchInput(sidebarSearch);
   }, [sidebarSearch]);
+
+  useEffect(() => {
+    const fetchFavorites = async () => {
+      const user = auth.currentUser;
+      if (!user) {
+        setIsLoadingFavorites(false);
+        return;
+      }
+
+      try {
+        setIsLoadingFavorites(true);
+        const q = query(collection(db, 'favorites'), where('userId', '==', user.uid));
+        const querySnapshot = await getDocs(q);
+        
+        const favoriteSlugs: string[] = [];
+        querySnapshot.forEach((doc) => {
+          const data = doc.data();
+          if (data.tourSlug) {
+            favoriteSlugs.push(data.tourSlug);
+          }
+        });
+        
+        setFavorites(favoriteSlugs);
+      } catch (error) {
+        console.error('Error fetching favorites:', error);
+      } finally {
+        setIsLoadingFavorites(false);
+      }
+    };
+
+    fetchFavorites();
+
+    const unsubscribe = auth.onAuthStateChanged((user) => {
+      if (user) {
+        fetchFavorites();
+      } else {
+        setFavorites([]);
+        setIsLoadingFavorites(false);
+      }
+    });
+
+    return () => unsubscribe();
+  }, []);
 
   const [selectedRating, setSelectedRating] = useState<number[]>([]);
   const [selectedPrice, setSelectedPrice] = useState<number[]>([]);
@@ -158,6 +237,7 @@ function TourPackagePage() {
   const [mergedAttractions, setMergedAttractions] = useState<AttractionType[]>([]);
   const [totalTours, setTotalTours] = useState<number>(0);
   const [initialLoadComplete, setInitialLoadComplete] = useState<boolean>(false);
+  const [priceRange, setPriceRange] = useState<[number, number]>([0.0001, 1]);
 
   useEffect(() => {
     let activeData = null;
@@ -185,11 +265,19 @@ function TourPackagePage() {
     }
 
     if (activeSuccess && activeData?.data?.products) {
-      setMergedAttractions(activeData.data.products);
+      const attractions = activeData.data.products;
+      setMergedAttractions(attractions);
       setTotalTours(activeData.data.filterStats?.filteredProductCount || 0);
+      
+      const newPriceRange = calculatePriceRange(attractions);
+      setPriceRange(newPriceRange);
+      
+      setSelectedPrice([]);
     } else if (initialLoadComplete && !activeFetching) {
       setMergedAttractions([]);
       setTotalTours(0);
+      setPriceRange([0.0001, 1]);
+      setSelectedPrice([]);
     }
   }, [
     activeDestination,
@@ -208,6 +296,14 @@ function TourPackagePage() {
     isFetchingDestination,
     initialLoadComplete,
   ]);
+
+  const handleFavoriteChange = (slugValue: string, isFavorite: boolean) => {
+    if (isFavorite) {
+      setFavorites(prev => [...prev, slugValue]);
+    } else {
+      setFavorites(prev => prev.filter(slug => slug !== slugValue));
+    }
+  };
 
   const totalPages = Math.max(1, Math.ceil(totalTours / TOURS_PER_PAGE));
   const pageNumbersToDisplay = generatePageNumbers(currentPage, totalPages);
@@ -247,8 +343,6 @@ function TourPackagePage() {
   function handleSortChange(value: string) {
     searchParams.set("sort", value);
     searchParams.set("page", "1");
-    setSelectedRating([]);
-    setSelectedPrice([]);
     setSearchParams(searchParams);
   }
 
@@ -320,7 +414,8 @@ function TourPackagePage() {
     (isLoadingSearched || isFetchingSearched) ||
     (isLoadingAttraction || isFetchingAttraction) ||
     (isLoadingTrending || isFetchingTrending) ||
-    !initialLoadComplete;
+    !initialLoadComplete ||
+    isLoadingFavorites;
 
   const hasError =
     initialLoadComplete &&
@@ -375,6 +470,7 @@ function TourPackagePage() {
         : "N/A";
       const slugValue = item?.slug || item.id?.toString();
       const uniqueKey = `${item.destinationId || "dest"}-${item.id || slugValue}-${currentPage}`;
+      const isFavorite = favorites.includes(slugValue);
 
       return (
         <TourCard
@@ -388,6 +484,8 @@ function TourPackagePage() {
           tourPrice={tourPrice}
           tourDuration="1 day"
           slugValue={slugValue}
+          isFavorite={isFavorite}
+          onFavoriteChange={handleFavoriteChange}
         />
       );
     });
@@ -458,6 +556,8 @@ function TourPackagePage() {
               <FilterByPrice
                 handleSelectedPrice={handleSelectedPrice}
                 currentPriceRange={selectedPrice}
+                minPrice={priceRange[0]}
+                maxPrice={priceRange[1]}
               />
             </div>
           )}

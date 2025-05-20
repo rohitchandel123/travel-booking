@@ -72,8 +72,7 @@ function Footer() {
               <li className="footer-cursive">Top Destination</li>
               {destinationColOne.map((destinationName) => (
                 <Link
-                  to={ROUTES_CONFIG.TOURS.path}
-                  state={{ footerDestination: destinationName }}
+                  to={`${ROUTES_CONFIG.TOURS.path}?sidebarSearch=${encodeURIComponent(destinationName)}&page=1`}
                   className="link-class"
                   key={`col1-${destinationName}`}
                 >
@@ -88,8 +87,7 @@ function Footer() {
               <li className="footer-cursive">Trending Destination</li>
               {destinationColTwo.map((destinationName) => (
                 <Link
-                  to={ROUTES_CONFIG.TOURS.path}
-                  state={{ footerDestination: destinationName }}
+                  to={`${ROUTES_CONFIG.TOURS.path}?sidebarSearch=${encodeURIComponent(destinationName)}&page=1`}
                   className="link-class"
                   key={`col2-${destinationName}`}
                 >

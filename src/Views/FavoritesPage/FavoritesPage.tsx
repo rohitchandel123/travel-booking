@@ -25,6 +25,7 @@ function FavoritesPage() {
   const [loading, setLoading] = useState<boolean>(true);
   const [user, setUser] = useState<User | null>(null); 
   const [authLoading, setAuthLoading] = useState<boolean>(true); 
+  const [favoriteSlugs, setFavoriteSlugs] = useState<string[]>([]);
 
   useEffect(() => {
     const unsubscribe = onAuthStateChanged(auth, (currentUser) => {
@@ -39,8 +40,10 @@ function FavoritesPage() {
     const fetchFavorites = async () => {
       if (!user) {
         setFavorites([]);
+        setFavoriteSlugs([]);
         setLoading(false);
         return;
+        console.log(favoriteSlugs)
       }
 
       try {
@@ -53,6 +56,9 @@ function FavoritesPage() {
           id: doc.id,
           ...doc.data(),
         } as FavoriteTour));
+        
+        const slugs = favoriteTours.map(tour => tour.tourSlug);
+        setFavoriteSlugs(slugs);
         setFavorites(favoriteTours);
       } catch (error) {
         console.error('Error fetching favorites:', error);
@@ -67,9 +73,18 @@ function FavoritesPage() {
   }, [user, authLoading]);
 
   const handleRemoveFavorite = (tourId: string) => {
-    setFavorites((prevFavorites) =>
-      prevFavorites.filter((tour) => tour.id !== tourId)
-    );
+    const tourToRemove = favorites.find(tour => tour.id === tourId);
+    if (tourToRemove) {
+      setFavorites(prevFavorites => prevFavorites.filter(tour => tour.id !== tourId));
+      setFavoriteSlugs(prevSlugs => prevSlugs.filter(slug => slug !== tourToRemove.tourSlug));
+    }
+  };
+
+  const handleFavoriteChange = (slugValue: string, isFavorite: boolean) => {
+    if (!isFavorite) {
+      setFavorites(prevFavorites => prevFavorites.filter(tour => tour.tourSlug !== slugValue));
+      setFavoriteSlugs(prevSlugs => prevSlugs.filter(slug => slug !== slugValue));
+    }
   };
 
   if (authLoading) {
@@ -88,7 +103,7 @@ function FavoritesPage() {
     <div className="favorites-page-container">
       <h2>Your Favorite Tours</h2>
       {favorites.length === 0 ? (
-        <p>No favorite tours yet.</p>
+        <p className='favorite-page-minor-heading'>No favorite tours yet.</p>
       ) : (
         <div className="favorites-grid">
           {favorites.map((tour) => (
@@ -103,6 +118,8 @@ function FavoritesPage() {
               tourPrice={`${tour.tourPrice ?? '0'}`}
               tourDuration={tour.tourDuration ?? 'N/A'}
               slugValue={tour.tourSlug}
+              isFavorite={true}
+              onFavoriteChange={handleFavoriteChange}
               onRemoveFavorite={() => handleRemoveFavorite(tour.id)}
             />
           ))}
