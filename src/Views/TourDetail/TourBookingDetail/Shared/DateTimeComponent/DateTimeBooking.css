@@ -4,13 +4,14 @@
   
   .book-now-date-time {
     width: 95%;
+    height:2.7 rem;
     padding: 0.375rem 0.75rem;
     font-size: 1rem;
     font-weight: 400;
     line-height: 1.5;
-    border: none;
-    border-radius: 8px;
-    color: #05103699;
+    border: 1px solid hsl(0, 0%, 80%);
+    border-radius: 3px;
+    color: #808080;
   }
   
   .ticket-label {

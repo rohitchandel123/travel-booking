@@ -102,13 +102,9 @@ const calculatePriceRange = (attractions: AttractionType[]): [number, number] =>
   const minPrice = Math.min(...ethPrices);
   const maxPrice = Math.max(...ethPrices);
 
-  const padding = (maxPrice - minPrice) * 0.1;
-  const paddedMin = Math.max(0.0001, minPrice - padding);
-  const paddedMax = maxPrice + padding;
-
   return [
-    Math.round(paddedMin * 100000) / 100000,
-    Math.round(paddedMax * 100000) / 100000
+    Math.round(minPrice * 100000) / 100000,
+    Math.round(maxPrice * 100000) / 100000
   ];
 };
 
