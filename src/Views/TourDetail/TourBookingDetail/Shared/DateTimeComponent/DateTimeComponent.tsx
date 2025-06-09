@@ -75,6 +75,16 @@ function DateTimeComponent({ sendDateTime, selectedCalendarDate, id }: DateTimeC
         onChange={handleTimeChange}
         options={timeOptions}
         isSearchable={false}
+        styles={{
+    control: (base, state) => ({
+      ...base,
+      borderColor: state.isFocused ? 'black' : base.borderColor,
+      boxShadow: state.isFocused ? '0 0 0 1px black' : base.boxShadow,
+      '&:hover': {
+        borderColor: state.isFocused ? 'black' : base.borderColor,
+      },
+    }),
+  }}
       />
     );
   }

@@ -34,8 +34,21 @@
   
   .react-select-container {
     width: 95%;
+    color: #8480A0 !important;
   }
   
+  .css-1dimb5e-singleValue {
+    grid-area: 1 / 1 / 2 / 3;
+    max-width: 100%;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    color: #8480A0 !important;
+    margin-left: 2px;
+    margin-right: 2px;
+    box-sizing: border-box;
+}
+
   .react-select__control {
     border-radius: 8px;
     border: none;
