@@ -1,5 +1,5 @@
 import './TourSlider.css';
-import { useState, useEffect, useMemo } from 'react';
+import { useState, useEffect, useMemo, useCallback } from 'react';
 import { useSwipeable } from 'react-swipeable';
 import { useGetTrendingAttractionQuery } from '../../Services/Api/module/demoApi';
 import TourCard from '../TourCard/index';
@@ -13,14 +13,39 @@ function TourSlider() {
   const { data, isLoading } = useGetTrendingAttractionQuery({ destinationId, currentPage });
   const [favorites, setFavorites] = useState<string[]>([]);
   const [isLoadingFavorites, setIsLoadingFavorites] = useState(true);
+  const [cardsPerSlide, setCardsPerSlide] = useState(4);
 
   const attractions = data?.data?.products?.slice(1, 9) || [];
-  const cardsPerSlide = 4;
   const totalSlides = attractions.length - cardsPerSlide + 1;
   const [currentIndex, setCurrentIndex] = useState(0);
   const ethPrice = 1765;
   const skeletonKeys = ['skeleton-1', 'skeleton-2', 'skeleton-3', 'skeleton-4'];
-  
+
+  // Handle responsive behavior
+  useEffect(() => {
+    const handleResize = () => {
+      const width = window.innerWidth;
+      if (width <= 480) {
+        setCardsPerSlide(1);
+      } else if (width <= 768) {
+        setCardsPerSlide(2);
+      } else if (width <= 992) {
+        setCardsPerSlide(3);
+      } else {
+        setCardsPerSlide(4);
+      }
+    };
+
+    handleResize(); // Initial call
+    window.addEventListener('resize', handleResize);
+    return () => window.removeEventListener('resize', handleResize);
+  }, []);
+
+  // Reset current index when cards per slide changes
+  useEffect(() => {
+    setCurrentIndex(0);
+  }, [cardsPerSlide]);
+
   useEffect(() => {
     const fetchFavorites = async () => {
       const user = auth.currentUser;
@@ -64,17 +89,17 @@ function TourSlider() {
     return () => unsubscribe();
   }, []);
 
-  const handleSwipeLeft = () => {
+  const handleSwipeLeft = useCallback(() => {
     setCurrentIndex((prev) =>
       prev + 1 < attractions.length ? prev + 1 : 0
     );
-  };
+  }, [attractions.length]);
 
-  const handleSwipeRight = () => {
+  const handleSwipeRight = useCallback(() => {
     setCurrentIndex((prev) =>
       prev - 1 >= 0 ? prev - 1 : attractions.length - cardsPerSlide
     );
-  };
+  }, [attractions.length, cardsPerSlide]);
 
   const dotKeys = useMemo(
     () => Array.from({ length: totalSlides }, (_) => crypto.randomUUID()),
@@ -85,34 +110,38 @@ function TourSlider() {
     onSwipedLeft: handleSwipeLeft,
     onSwipedRight: handleSwipeRight,
     trackMouse: true,
+    delta: 10,
+    swipeDuration: 500,
   });
 
-  const handleDotClick = (index: number) => {
+  const handleDotClick = useCallback((index: number) => {
     setCurrentIndex(index);
-  };
+  }, []);
 
-  const getVisibleCards = () => {
+  const getVisibleCards = useCallback(() => {
     let visible = attractions.slice(currentIndex, currentIndex + cardsPerSlide);
     if (visible.length < cardsPerSlide) {
       const remaining = cardsPerSlide - visible.length;
       visible = [...visible, ...attractions.slice(0, remaining)];
     }
     return visible;
-  };
+  }, [attractions, currentIndex, cardsPerSlide]);
 
-  const handleFavoriteChange = (slugValue: string, isFavorite: boolean) => {
+  const handleFavoriteChange = useCallback((slugValue: string, isFavorite: boolean) => {
     if (isFavorite) {
       setFavorites(prev => [...prev, slugValue]);
     } else {
       setFavorites(prev => prev.filter(slug => slug !== slugValue));
     }
-  };
+  }, []);
 
   return (
     <div className="tour-slider-container" {...handlers}>
       <div className="tour-slider-content">
         {isLoading || isLoadingFavorites ? (
-          Array.from({ length: 4 }).map((_, i) => <TourCardSkeleton key={skeletonKeys[i]} />)
+          Array.from({ length: cardsPerSlide }).map((_, i) => (
+            <TourCardSkeleton key={skeletonKeys[i % skeletonKeys.length]} />
+          ))
         ) : (
           getVisibleCards().map((item: any, i: number) => {
             const countryName = item?.ufiDetails?.url?.country?.toUpperCase();
@@ -121,7 +150,6 @@ function TourSlider() {
             const tourImage = item?.primaryPhoto?.small;
             const tourRating = item?.reviewsStats?.combinedNumericStats?.average;
             const tourReview = item?.reviewsStats?.combinedNumericStats.total;
-
             const usdPrice = item?.representativePrice?.chargeAmount;
             const tourPrice = ethPrice ? `${(usdPrice / ethPrice).toFixed(5)} ETH` : "Loading...";
             const slugValue = item?.slug;
@@ -147,15 +175,18 @@ function TourSlider() {
         )}
       </div>
 
-      <div className="navigation-dots">
-        {dotKeys.map((key, index) => (
-          <button
-            key={key}
-            className={`slider-btn dot ${currentIndex === index ? 'active' : ''}`}
-            onClick={() => handleDotClick(index)}
-          />
-        ))}
-      </div>
+      {!isLoading && !isLoadingFavorites && totalSlides > 1 && (
+        <div className="navigation-dots">
+          {dotKeys.map((key, index) => (
+            <button
+              key={key}
+              className={`slider-btn dot ${currentIndex === index ? 'active' : ''}`}
+              onClick={() => handleDotClick(index)}
+              aria-label={`Go to slide ${index + 1}`}
+            />
+          ))}
+        </div>
+      )}
     </div>
   );
 }

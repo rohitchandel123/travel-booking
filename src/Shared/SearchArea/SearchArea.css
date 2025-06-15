@@ -1,6 +1,7 @@
 .search-area-container {
-  width: 1296px;
-  height: 121px;
+  width: 90%;
+  max-width: 1296px;
+  min-height: 121px;
   border-radius: 12px;
   position: absolute;
   left: 50%;
@@ -11,17 +12,23 @@
   display: flex;
   align-items: center;
   z-index: 10;
+  padding: 20px;
+  box-sizing: border-box;
 }
 
 .search-area-form-class {
   width: 100%;
   display: flex;
-  justify-content: space-around;
+  justify-content: space-between;
+  gap: 15px;
+  flex-wrap: wrap;
 }
 
 .single-Form-element-class {
   display: flex;
   flex-direction: column;
+  flex: 1;
+  min-width: 200px;
 }
 
 .input-with-icon {
@@ -55,7 +62,7 @@
 }
 
 .react-datepicker__input-container input {
-  width: 105%;
+  width: 100%;
   box-sizing: border-box;
   caret-color: transparent;
 }
@@ -67,11 +74,18 @@
   border-radius: 6px;
   font-size: 15px;
   margin-top: 1.7%;
+  height: 40px;
+  min-width: 95px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+.search-area-container button:hover {
+  background-color: #e04e4e;
 }
 
 .submit-search-query {
-  height: 40px;
-  width: 95px;
+  align-self: flex-end;
 }
 
 .form-error {
@@ -87,10 +101,10 @@
 }
 
 .guest-field {
-  width: 17vh;
+  width: 100%;
 }
 
-/* new changes */
+/* Date picker styles */
 .react-datepicker__header {
   padding: 13px 24px !important;
 }
@@ -101,10 +115,8 @@ h2.react-datepicker__current-month {
 
 .react-datepicker__month-dropdown-container,
 .react-datepicker__month-dropdown-container--select {
-  margin: 1% 12% 2% 7% !important ;
+  margin: 1% 12% 2% 7% !important;
 }
-
-
 
 .react-datepicker__day--keyboard-selected {
   background-color: white !important;
@@ -116,7 +128,89 @@ h2.react-datepicker__current-month {
   color: black !important;
 }
 
+.date-label {
+  margin-bottom: 4px;
+}
 
-.date-label{
-margin-bottom: 4px;
+/* Responsive styles */
+@media screen and (max-width: 1200px) {
+  .search-area-container {
+    width: 95%;
+  }
+
+  .single-Form-element-class {
+    min-width: 180px;
+  }
+}
+
+@media screen and (max-width: 992px) {
+  .search-area-form-class {
+    gap: 10px;
+  }
+
+  .single-Form-element-class {
+    min-width: 160px;
+  }
+
+  .search-area-form-field {
+    font-size: 13px;
+  }
+
+  .search-area-form-label {
+    font-size: 13px;
+  }
+}
+
+@media screen and (max-width: 768px) {
+  .search-area-container {
+    position: relative;
+    transform: none;
+    left: 0;
+    margin: 20px auto;
+    width: 100%;
+    border-radius: 8px;
+  }
+
+  .search-area-form-class {
+    flex-direction: column;
+    gap: 15px;
+  }
+
+  .single-Form-element-class {
+    min-width: 100%;
+  }
+
+  .submit-search-query {
+    width: 100%;
+    margin-top: 10px;
+  }
+
+  .react-datepicker__month-dropdown-container,
+  .react-datepicker__month-dropdown-container--select {
+    margin: 1% 8% 2% 5% !important;
+  }
+}
+
+@media screen and (max-width: 480px) {
+  .search-area-container {
+    padding: 15px;
+  }
+
+  .search-area-form-field {
+    font-size: 12px;
+    height: 38px;
+  }
+
+  .search-area-form-label {
+    font-size: 12px;
+  }
+
+  .search-area-container button {
+    font-size: 14px;
+    height: 38px;
+  }
+
+  .react-datepicker__header {
+    padding: 10px 15px !important;
+  }
 }
