@@ -289,7 +289,6 @@ function Signup() {
           </div>
 
           <div className="social-auth">
-            {/* <SocialBtn name="Google" handleClick={handleGoogleSignUp} /> */}
             <button
               className="sign-up-btn social-btn"
               onClick={handleGoogleSignUp}

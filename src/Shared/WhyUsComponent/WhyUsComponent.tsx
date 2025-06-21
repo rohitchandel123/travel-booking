@@ -14,9 +14,7 @@ function WhyUsComponent() {
         </div>
 
         <div className="whyUs-content-div"> 
-          {/* for about apge */}
           <ForHomePage />
-          {/* upto here */}
         </div>
       </div>
     </div>

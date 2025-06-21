@@ -101,7 +101,6 @@ export default function Dashboard() {
 
       <HomepageDestination />
 
-      {/* why us section */}
       <WhyUsComponent />
 
       <div className="browse-by-category-wrapper">

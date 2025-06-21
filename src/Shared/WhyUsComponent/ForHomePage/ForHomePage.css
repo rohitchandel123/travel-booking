@@ -80,7 +80,7 @@
   margin-top: 4px;
 }
 
-/* Responsive styles */
+
 @media screen and (max-width: 1200px) {
   .content-subHeader h2 {
     font-size: 42px;

@@ -106,7 +106,7 @@
 }
 
 .logout-btn {
-  display: none; /* Hide the standalone logout button */
+  display: none; 
 }
 
 .user-dropdown {
@@ -212,7 +212,6 @@
   background-color: #e04e4e;
 }
 
-/* Responsive styles */
 @media screen and (max-width: 1024px) {
   .header-items {
     gap: 15px;
@@ -227,11 +226,11 @@
 @media screen and (max-width: 768px) {
   .mobile-menu-btn {
     display: block;
-    order: 2; /* Move menu button to the end */
+    order: 2; 
   }
 
   .right-header {
-    order: 1; /* Keep other elements before menu button */
+    order: 1; 
   }
 
   .header-items {

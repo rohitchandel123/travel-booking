@@ -21,7 +21,6 @@ function TourSlider() {
   const ethPrice = 1765;
   const skeletonKeys = ['skeleton-1', 'skeleton-2', 'skeleton-3', 'skeleton-4'];
 
-  // Handle responsive behavior
   useEffect(() => {
     const handleResize = () => {
       const width = window.innerWidth;
@@ -36,12 +35,11 @@ function TourSlider() {
       }
     };
 
-    handleResize(); // Initial call
+    handleResize(); 
     window.addEventListener('resize', handleResize);
     return () => window.removeEventListener('resize', handleResize);
   }, []);
 
-  // Reset current index when cards per slide changes
   useEffect(() => {
     setCurrentIndex(0);
   }, [cardsPerSlide]);

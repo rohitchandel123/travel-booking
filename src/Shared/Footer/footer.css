@@ -98,3 +98,58 @@ border: none;
   font-size: 0.8rem;
   margin-top: 4px;
 }
+
+@media (max-width: 900px) {
+  .footer-section {
+    flex-direction: column;
+    align-items: center;
+    width: 100%;
+    padding: 5% 2%;
+  }
+  .mid-footer {
+    flex-direction: column;
+    align-items: center;
+    width: 100%;
+    margin: 0;
+  }
+  .company, .top-destination, .right-footer {
+    margin: 16px 0;
+    width: 100%;
+    text-align: center;
+  }
+}
+
+@media (max-width: 600px) {
+  .footer-section {
+    padding: 8% 2%;
+  }
+  .left-footer, .mid-footer, .right-footer {
+    width: 100%;
+    text-align: center;
+    margin: 0 0 20px 0;
+  }
+  .mid-footer {
+    flex-direction: column;
+    gap: 0;
+  }
+  .company, .top-destination {
+    margin: 10px 0;
+  }
+  .right-footer input, .right-footer button {
+    width: 90%;
+    max-width: 350px;
+    margin: 0 auto 10px auto;
+    display: block;
+    font-size: 1rem;
+  }
+  .right-footer button {
+    padding: 10px 0;
+  }
+  .right-footer p {
+    margin-top: 20px;
+    font-size: 0.95rem;
+  }
+  .footer-cursive {
+    font-size: 1rem;
+  }
+}

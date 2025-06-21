@@ -30,7 +30,7 @@
   font-weight: 500;
 }
 
-/* Responsive styles */
+
 @media screen and (max-width: 1200px) {
   .content-subHeader h2 {
     font-size: 42px;
