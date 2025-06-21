@@ -17,14 +17,14 @@ justify-content: space-between;
 align-items: center;
 }
 
-/* Custom Progress Bar Styling */
+
 progress {
     height: 8px;
     width: 88%;
     appearance: none;
 }
 
-/* Chrome & Safari */
+
 progress::-webkit-progress-bar {
     background-color: #eee;
     border-radius: 5px;
@@ -35,7 +35,6 @@ progress::-webkit-progress-value {
     border-radius: 5px; 
 }
 
-/* Firefox */
 progress::-moz-progress-bar {
     background-color:#dd2329;
     border-radius: 5px;

@@ -130,7 +130,7 @@ margin: -3.5% 5% 3% 5%;
     cursor: pointer;
     text-decoration: none; 
     user-select: none;
-    transition: background-color 0.2s ease, color 0.2s ease, border-color 0.2s ease, transform 0.1s ease; /* Smooth transitions */
+    transition: background-color 0.2s ease, color 0.2s ease, border-color 0.2s ease, transform 0.1s ease; 
     box-sizing: border-box; 
 
     border-radius: 100% !important;

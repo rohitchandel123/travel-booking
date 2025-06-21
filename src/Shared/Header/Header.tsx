@@ -8,6 +8,8 @@ import { onAuthStateChanged, signOut, User } from "firebase/auth";
 import { toast } from "react-toastify";
 import { useDispatch } from "react-redux";
 import { updateAuthTokenRedux } from "../../Store/Common";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faBars, faTimes } from "@fortawesome/free-solid-svg-icons";
 
 function Header() {
   const dispatch = useDispatch();
@@ -15,7 +17,9 @@ function Header() {
   const [user, setUser] = useState<User | null>(null);
   const [menuOpen, setMenuOpen] = useState(false);
   const [showLogoutPopup, setShowLogoutPopup] = useState(false);
+  const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const dropdownRef = useRef<HTMLDivElement>(null);
+  const mobileMenuRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     const unsubscribe = onAuthStateChanged(auth, (currentUser) => {
@@ -31,6 +35,13 @@ function Header() {
         !dropdownRef.current.contains(event.target as Node)
       ) {
         setMenuOpen(false);
+      }
+      if (
+        mobileMenuRef.current &&
+        !mobileMenuRef.current.contains(event.target as Node) &&
+        !(event.target as Element).closest('.mobile-menu-btn')
+      ) {
+        setMobileMenuOpen(false);
       }
     };
     document.addEventListener("mousedown", handleClickOutside);
@@ -56,6 +67,7 @@ function Header() {
       navigate(ROUTES_CONFIG.HOMEPAGE.path);
       dispatch(updateAuthTokenRedux({ token: null }));
       toast.success("Logged out successfully!");
+      setMobileMenuOpen(false);
     } catch (error) {
       toast.error("Logout failed. Please try again.");
     }
@@ -72,6 +84,7 @@ function Header() {
 
   const openLogoutPopup = () => {
     setShowLogoutPopup(true);
+    setMobileMenuOpen(false);
   };
 
   const closeLogoutPopup = () => {
@@ -80,6 +93,11 @@ function Header() {
 
   const handleMenuLinkClick = () => {
     setMenuOpen(false);
+    setMobileMenuOpen(false);
+  };
+
+  const toggleMobileMenu = () => {
+    setMobileMenuOpen(!mobileMenuOpen);
   };
 
   return (
@@ -91,12 +109,13 @@ function Header() {
           </Link>
         </div>
 
-        <div className="header-items">
+        <div className={`header-items ${mobileMenuOpen ? 'active' : ''}`} ref={mobileMenuRef}>
           <NavLink
             to={ROUTES_CONFIG.HOMEPAGE.path}
             className={({ isActive }) =>
               `link-class ${isActive ? "active-link" : ""}`
             }
+            onClick={handleMenuLinkClick}
           >
             <li>{ROUTES_CONFIG.HOMEPAGE.title}</li>
           </NavLink>
@@ -105,6 +124,7 @@ function Header() {
             className={({ isActive }) =>
               `link-class ${isActive ? "active-link" : ""}`
             }
+            onClick={handleMenuLinkClick}
           >
             <li>{ROUTES_CONFIG.ABOUT.title}</li>
           </NavLink>
@@ -114,6 +134,7 @@ function Header() {
             className={({ isActive }) =>
               `link-class ${isActive ? "active-link" : ""}`
             }
+            onClick={handleMenuLinkClick}
           >
             <li>Tours</li>
           </NavLink>
@@ -122,6 +143,7 @@ function Header() {
             className={({ isActive }) =>
               `link-class ${isActive ? "active-link" : ""}`
             }
+            onClick={handleMenuLinkClick}
           >
             <li>Destination</li>
           </NavLink>
@@ -130,6 +152,7 @@ function Header() {
             className={({ isActive }) =>
               `link-class ${isActive ? "active-link" : ""}`
             }
+            onClick={handleMenuLinkClick}
           >
             <li>Blog</li>
           </NavLink>
@@ -138,6 +161,7 @@ function Header() {
             className={({ isActive }) =>
               `link-class ${isActive ? "active-link" : ""}`
             }
+            onClick={handleMenuLinkClick}
           >
             <li>{ROUTES_CONFIG.CONTACT.title}</li>
           </NavLink>
@@ -169,6 +193,7 @@ function Header() {
                   onClick={handleMenuLinkClick}
                   role="menuitem"
                 >
+                  <i className="fa-solid fa-calendar-check" aria-hidden="true" />
                   Booked Tours
                 </Link>
                 <Link
@@ -177,23 +202,28 @@ function Header() {
                   onClick={handleMenuLinkClick}
                   role="menuitem"
                 >
+                  <i className="fa-solid fa-heart" aria-hidden="true" />
                   Favourite Tours
                 </Link>
+                <button 
+                  className="dropdown-item" 
+                  onClick={openLogoutPopup}
+                  role="menuitem"
+                >
+                  <i className="fa-solid fa-sign-out-alt" aria-hidden="true" />
+                  Logout
+                </button>
               </div>
             )}
-
-            <button className="logout-btn" onClick={openLogoutPopup}>
-              <i className="fa-solid fa-sign-out-alt" aria-hidden="true" />
-              <span>Logout</span>
-            </button>
           </div>
         ) : (
-          <div className="auth-links">
+          <div className={`auth-links ${mobileMenuOpen ? 'active' : ''}`}>
             <NavLink
               to={ROUTES_CONFIG.LOGIN.path}
               className={({ isActive }) =>
                 `auth-link ${isActive ? "active-link" : ""}`
               }
+              onClick={handleMenuLinkClick}
             >
               <i className="fa-regular fa-user" aria-hidden="true" />{" "}
               <span>{ROUTES_CONFIG.LOGIN.title}</span>
@@ -206,17 +236,26 @@ function Header() {
               className={({ isActive }) =>
                 `auth-link ${isActive ? "active-link" : ""}`
               }
+              onClick={handleMenuLinkClick}
             >
               {ROUTES_CONFIG.REGISTER.title}
             </NavLink>
           </div>
         )}
+        <button 
+          className="mobile-menu-btn" 
+          onClick={toggleMobileMenu} 
+          aria-label="Toggle menu"
+          aria-expanded={mobileMenuOpen}
+        >
+          <FontAwesomeIcon icon={mobileMenuOpen ? faTimes : faBars} />
+        </button>
       </div>
 
       {showLogoutPopup && (
-        <button className="logout-popup-wrapper btn-as-container" onClick={closeLogoutPopup}>
-          <button className="logout-popup btn-as-container" onClick={(e) => e.stopPropagation()}>
-            <h3>Are you sure you want to log out ?</h3>
+        <div className="logout-popup-wrapper" onClick={closeLogoutPopup}>
+          <div className="logout-popup" onClick={(e) => e.stopPropagation()}>
+            <h3>Are you sure you want to log out?</h3>
             <div className="popup-actions">
               <button className="confirm-btn" onClick={handleLogout}>
                 Logout
@@ -225,10 +264,9 @@ function Header() {
                 Cancel
               </button>
             </div>
-          </button>
-        </button>
+          </div>
+        </div>
       )}
-
     </div>
   );
 }

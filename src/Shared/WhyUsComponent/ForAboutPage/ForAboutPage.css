@@ -1,0 +1,91 @@
+.content-subHeader h2 {
+  font-family: "Inter", sans-serif;
+  font-size: 48px;
+  font-weight: 700;
+  line-height: 120%;
+  color: #051036;
+  margin: 0;
+}
+
+.content-subHeader p {
+  font-family: "Inter", sans-serif;
+  font-size: 16px;
+  font-weight: 400;
+  line-height: 162.5%;
+  color: rgba(5, 16, 54, 0.6);
+  margin: 0;
+  margin-top: 16px;
+}
+
+.content-subHeader {
+  margin-bottom: 32px;
+}
+
+.content-subHeader h2 span {
+  color: #3554d1;
+}
+
+.content-subHeader p span {
+  color: #051036;
+  font-weight: 500;
+}
+
+
+@media screen and (max-width: 1200px) {
+  .content-subHeader h2 {
+    font-size: 42px;
+  }
+
+  .content-subHeader p {
+    font-size: 15px;
+  }
+
+  .content-subHeader {
+    margin-bottom: 28px;
+  }
+}
+
+@media screen and (max-width: 992px) {
+  .content-subHeader h2 {
+    font-size: 36px;
+  }
+
+  .content-subHeader p {
+    font-size: 15px;
+    margin-top: 14px;
+  }
+
+  .content-subHeader {
+    margin-bottom: 24px;
+  }
+}
+
+@media screen and (max-width: 768px) {
+  .content-subHeader h2 {
+    font-size: 32px;
+  }
+
+  .content-subHeader p {
+    font-size: 14px;
+    margin-top: 12px;
+  }
+
+  .content-subHeader {
+    margin-bottom: 20px;
+  }
+}
+
+@media screen and (max-width: 480px) {
+  .content-subHeader h2 {
+    font-size: 28px;
+  }
+
+  .content-subHeader p {
+    font-size: 13px;
+    margin-top: 10px;
+  }
+
+  .content-subHeader {
+    margin-bottom: 16px;
+  }
+} 

@@ -36,24 +36,33 @@ function SearchArea({
   useEffect(() => {
     if (isSearchArea === false) {
       setShouldResetForm(true);
-    }
+      console.log(datePickerBlurred);    }
   }, [isSearchArea]);
 
   const handleSearch = (
     values: SearchFormValues,
     actions: FormikHelpers<SearchFormValues>
   ) => {
+    actions.setStatus({ isSubmitting: true });
+
     const trimmedDestinationName = values.destinationName.trim();
     const trimmedActivity = values.activity.trim();
 
-    if (!trimmedDestinationName || !trimmedActivity) {
+    if (!trimmedDestinationName || !trimmedActivity || !values.selectDate[0] || !values.selectDate[1] || !values["guest-numbers"]) {
       if (!trimmedDestinationName) {
         actions.setFieldError("destinationName", "Destination can't be empty");
       }
       if (!trimmedActivity) {
         actions.setFieldError("activity", "Activity can't be empty");
       }
+      if (!values.selectDate[0] || !values.selectDate[1]) {
+        actions.setFieldError("selectDate", "Required");
+      }
+      if (!values["guest-numbers"]) {
+        actions.setFieldError("guest-numbers", "Required");
+      }
       actions.setSubmitting(false);
+      actions.setStatus({ isSubmitting: false });
       return;
     }
 
@@ -72,6 +81,7 @@ function SearchArea({
 
     navigate(`${ROUTES_CONFIG.TOURS.path}?${params.toString()}`);
     actions.setSubmitting(false);
+    actions.setStatus({ isSubmitting: false }); 
   };
 
   const handleGuestKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
@@ -189,6 +199,7 @@ function SearchArea({
           errors,
           touched,
           handleBlur,
+          setFieldTouched,
         }) => {
           if (shouldResetForm) {
             resetForm({ values: defaultInitialValues });
@@ -234,10 +245,14 @@ function SearchArea({
                     selected={values.selectDate[0]}
                     onChange={(dates: [Date | null, Date | null]) => {
                       setFieldValue("selectDate", dates);
+                      if ((dates[0] && dates[1]) || (!dates[0] && !dates[1])) {
+                        setFieldTouched("selectDate", true, false);
+                      }
                     }}
                     onBlur={() => {
                       setDatePickerBlurred(true);
                       handleBlur("selectDate");
+                      setFieldTouched("selectDate", true, true);
                     }}
                     startDate={values.selectDate[0]}
                     endDate={values.selectDate[1]}
@@ -262,7 +277,7 @@ function SearchArea({
                     aria-label="Select check-in and check-out dates"
                   />
                 </div>
-                {(datePickerBlurred || touched.selectDate) && errors.selectDate && (
+                {touched.selectDate && errors.selectDate && (
                   <div className="form-error" role="alert">
                     {errors.selectDate}
                   </div>

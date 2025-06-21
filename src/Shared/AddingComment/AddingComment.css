@@ -44,7 +44,6 @@
     border-radius: 6px;
 }
 
-/* Consistent placeholder styling across browsers */
 ::placeholder,
 ::-webkit-input-placeholder,
 ::-moz-placeholder,

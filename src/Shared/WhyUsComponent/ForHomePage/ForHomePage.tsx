@@ -18,4 +18,5 @@ function ForHomePage() {
     </div>
   );
 }
+
 export default ForHomePage;
