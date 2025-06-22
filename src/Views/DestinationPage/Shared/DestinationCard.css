@@ -65,3 +65,45 @@
     text-decoration: none;
   }
   
+  /* Responsive styles for DestinationCard */
+  @media (max-width: 1024px) {
+    .destination-card-wrapper {
+      height: 180px;
+      min-height: 140px;
+    }
+  }
+  
+  @media (max-width: 768px) {
+    .destination-card-wrapper {
+      height: 38vw;
+      min-height: 120px;
+      max-height: 200px;
+    }
+    .destination-card-wrapper img {
+      height: 100%;
+      width: 100%;
+      object-fit: cover;
+    }
+  }
+  
+  @media (max-width: 480px) {
+    .destination-card-wrapper {
+      height: 44vw;
+      min-height: 100px;
+      max-height: 160px;
+      border-radius: 10px;
+    }
+    .destination-card-wrapper img {
+      height: 100%;
+      width: 100%;
+      object-fit: cover;
+      border-radius: 10px;
+    }
+    .destination-name-container {
+      padding: 0.8rem;
+    }
+    .destination-card-wrapper h5 {
+      font-size: 1.1rem;
+    }
+  }
+  

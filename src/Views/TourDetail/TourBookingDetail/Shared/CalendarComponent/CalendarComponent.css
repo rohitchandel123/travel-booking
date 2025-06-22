@@ -19,3 +19,51 @@
 .react-calendar__navigation__label {
     pointer-events: none;
   }
+
+@media (max-width: 768px) {
+  .full-size-calendar {
+    width: 100% !important;
+    max-width: 100% !important;
+    min-width: 0;
+    height: auto;
+  }
+  .calendar-container {
+    width: 100%;
+    min-width: 0;
+    height: auto;
+    max-height: 320px;
+    overflow-y: auto;
+  }
+  .react-calendar {
+    width: 100% !important;
+    min-width: 0;
+    height: auto !important;
+    max-height: 320px;
+    overflow-y: auto;
+  }
+}
+
+@media (max-width: 480px) {
+  .full-size-calendar {
+    width: 100% !important;
+    max-width: 100% !important;
+    min-width: 0;
+    height: auto;
+  }
+  .calendar-container {
+    width: 100%;
+    min-width: 0;
+    height: auto;
+    padding: 0;
+    max-height: 220px;
+    overflow-y: auto;
+  }
+  .react-calendar {
+    width: 100% !important;
+    min-width: 0;
+    height: auto !important;
+    font-size: 13px;
+    max-height: 220px;
+    overflow-y: auto;
+  }
+}

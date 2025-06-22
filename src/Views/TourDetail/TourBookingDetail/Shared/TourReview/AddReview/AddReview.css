@@ -19,3 +19,27 @@
 margin-top: 7%;
 }
 
+@media (max-width: 768px) {
+  .add-review-container {
+    width: 100%;
+    padding: 4%;
+    height: auto;
+  }
+  .review-rating-container {
+    flex-direction: column;
+    gap: 10px;
+  }
+}
+
+@media (max-width: 480px) {
+  .add-review-container {
+    width: 100%;
+    padding: 2%;
+    height: auto;
+  }
+  .review-rating-container {
+    flex-direction: column;
+    gap: 6px;
+  }
+}
+

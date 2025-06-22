@@ -228,43 +228,60 @@
 
 @media screen and (max-width: 480px) {
   .tour-card-container {
-    min-width: 200px;
+    min-width: 0;
+    max-width: 95vw;
+    width: 95vw;
+    border-radius: 12px;
+    margin-bottom: 18px;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.022);
+    background-color: #f7f8f9;
+    padding: 6px 0;
+    margin-left: auto;
+    margin-right: auto;
+    box-sizing: border-box;
   }
-
+  .tour-image-container {
+    border-radius: 12px 12px 0 0;
+    overflow: hidden;
+  }
+  .tour-image-container img {
+    border-radius: 12px 12px 0 0;
+  }
   .tour-card-container h4 {
     font-size: 14px;
     margin: 0.8rem 0;
+    min-height: 36px;
   }
-
   .tour-info-container {
-    padding: 10px 12px 2px 12px;
-    min-height: 160px;
+    padding: 14px 14px 4px 14px;
+    min-height: 120px;
+    border-radius: 0 0 12px 12px;
   }
-
   .tour-additional-info {
     margin-top: 5%;
+    gap: 6px;
   }
-
   .rating-star-class {
     font-size: 12px;
-    padding: 2px;
+    padding: 2px 6px;
+    border-radius: 6px;
   }
-
   .tour-additional-info-text {
     font-size: 11px;
   }
-
   .tour-price-text {
     font-size: 15px;
   }
-
   .favorite-button {
-    width: 26px;
-    height: 26px;
+    width: 32px;
+    height: 32px;
+    top: 8px;
+    right: 8px;
+    border-radius: 50%;
+    font-size: 18px;
   }
-
   .heart-icon {
-    font-size: 13px;
+    font-size: 16px;
   }
 }
 
