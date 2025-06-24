@@ -179,19 +179,21 @@ function BlogDetailPage() {
         </div>
 
         <div className="author-section">
-          <div className="author-image-wrapper">
-            <div className="author-image-container">
-              <img src={ProjectImages.BLANK_PROFILE} alt="Author" />
+          <div className="author-row">
+            <div className="author-image-wrapper">
+              <div className="author-image-container">
+                <img src={ProjectImages.BLANK_PROFILE} alt="Author" />
+              </div>
+            </div>
+            <div className="author-info">
+              <h6>Simmons</h6>
+              <span>Author</span>
             </div>
           </div>
-          <div className="author-information-container">
-            <h6>Simmons</h6>
-            <span>Author</span>
-            <p className="project-normal-font">
-              Objectively productivate just in time information with dynamic
-              channels. Energistically exploit seamless growth strategies after
-              24/7 experiences.
-            </p>
+          <div className="author-description">
+            Objectively productivate just in time information with dynamic
+            channels. Energistically exploit seamless growth strategies after
+            24/7 experiences.
           </div>
         </div>
 

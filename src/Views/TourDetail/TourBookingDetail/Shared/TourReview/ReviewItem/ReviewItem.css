@@ -39,3 +39,23 @@ progress::-moz-progress-bar {
     background-color:#dd2329;
     border-radius: 5px;
 }
+
+@media (max-width: 768px) {
+  .review-item-container {
+    width: 100%;
+    padding: 10px 0;
+  }
+  .review-item-container p {
+    font-size: 13px;
+  }
+}
+
+@media (max-width: 480px) {
+  .review-item-container {
+    width: 100%;
+    padding: 6px 0;
+  }
+  .review-item-container p {
+    font-size: 12px;
+  }
+}

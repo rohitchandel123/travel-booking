@@ -53,5 +53,126 @@ background-color: #f7f8f9;
     width:100%;
 }
 
+/* Responsive styles for ContactPage */
+@media (max-width: 1200px) {
+  .contact-page-container {
+    width: 90%;
+  }
+  .contact-info-tabs {
+    gap: 2vw;
+  }
+}
+
+@media (max-width: 992px) {
+  .contact-page-container {
+    width: 98%;
+  }
+  .contact-info-tabs {
+    flex-direction: column;
+    align-items: stretch;
+    height: auto;
+    gap: 18px;
+  }
+  .contact-element-wrapper {
+    width: 100%;
+    margin-bottom: 0;
+  }
+  .question-map-section {
+    flex-direction: column;
+    height: auto;
+    gap: 18px;
+  }
+  .question-wrapper, .map__wrapper {
+    width: 100%;
+    height: 320px;
+  }
+}
+
+@media (max-width: 768px) {
+  .contact-page-wrapper {
+    margin-top: 8vw;
+    padding: 0 2vw;
+  }
+  .contact-page-container {
+    width: 100%;
+  }
+  .contact-info-tabs {
+    flex-direction: column;
+    align-items: stretch;
+    height: auto;
+    gap: 14px;
+  }
+  .contact-element-wrapper {
+    width: 100%;
+    margin-bottom: 0;
+  }
+  .question-map-section {
+    flex-direction: column;
+    height: auto;
+    gap: 14px;
+    padding-bottom: 12px;
+  }
+  .question-wrapper {
+    width: 100%;
+    min-height: 160px;
+    margin: 20px 0 20px 0;
+  }
+  .map__wrapper {
+    width: 100%;
+    min-height: 140px;
+  }
+  .asking-question-wrapper {
+    margin-top: 12px;
+    margin-bottom: 16px;
+  }
+}
+
+@media (max-width: 480px) {
+  .contact-page-wrapper {
+    margin-top: 12vw;
+    padding: 0 1vw;
+  }
+  .contact-page-container {
+    width: 100%;
+  }
+  .contact-info-tabs {
+    flex-direction: column;
+    align-items: stretch;
+    height: auto;
+    gap: 8px;
+  }
+  .contact-element-wrapper {
+    width: 100%;
+    min-width: 0;
+    margin-bottom: 0;
+    height: auto;
+  }
+  .question-map-section {
+    flex-direction: column;
+    height: auto;
+    gap: 8px;
+    padding-bottom: 10px;
+  }
+  .question-wrapper {
+    width: 100%;
+    min-height: 120px;
+    margin-bottom: 10px;
+  }
+  .map__wrapper {
+    width: 100%;
+    min-height: 100px;
+  }
+  .question-wrapper h2 {
+    font-size: 18px;
+  }
+  .question-wrapper h4 {
+    font-size: 15px;
+  }
+  .asking-question-wrapper {
+    margin-top: 8px;
+    margin-bottom: 12px;
+  }
+}
+
 
 
